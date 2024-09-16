@@ -22,7 +22,7 @@ export const trimmed = <T>(parser: Parser<T>) =>
 export const digits = oneOrMoreChar(isDigit, 'expected digits, got none')
 
 const digitsWithOptionalSign = P.map(
-  trimmed(sequence([optional(anyOf([char('-'), char('+')])), digits] as const)),
+  trimmed(sequence([optional(anyOf([char('-'), char('+')])), digits])),
   ([sign, digits]: [Maybe<string>, string]) =>
     just(sign) ? `${sign.value}${digits}` : digits
 )
