@@ -12,19 +12,23 @@ import {
 } from '../algebraic/type'
 
 export const sequence =
-  <A>(parsers: Readonly<Parser<A>[]>): Parser<A[]> =>
+  <T extends any[]>(parsers: { [K in keyof T]: Parser<T[K]> }): Parser<{
+    [K in keyof T]: T[K]
+  }> =>
   (input) => {
-    const results: A[] = []
+    const results: { [K in keyof T]: T[K] } = {} as any
     let rest = input
-    for (const parser of parsers) {
+
+    for (let i = 0; i < parsers.length; i++) {
+      const parser = parsers[i]
       const result = parser(rest)
       if (failure(result)) return result
-      results.push(result.value)
+      results[i as keyof T] = result.value
       rest = result.rest
     }
-    return P.of(results)(rest)
-  }
 
+    return P.of(results as { [K in keyof T]: T[K] })(rest)
+  }
 export const str =
   (str: string): Parser<string> =>
   (input) => {
