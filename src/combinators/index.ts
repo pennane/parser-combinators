@@ -15,8 +15,8 @@ export const maybeWhitespace = zeroOrMoreChar(isWhitespace)
 
 export const trimmed = <T>(parser: Parser<T>) =>
   P.map(
-    sequence<any>([maybeWhitespace, parser, maybeWhitespace]),
-    ([_1, result, _2]) => result as unknown as T
+    sequence([maybeWhitespace, parser, maybeWhitespace]),
+    ([_1, result, _2]) => result
   )
 
 export const digits = oneOrMoreChar(isDigit, 'expected digits, got none')
